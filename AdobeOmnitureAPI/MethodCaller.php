@@ -48,6 +48,14 @@ class MethodCaller
 		}
 	}
 	
+	/*
+	 * This function will take in the data and validate it
+	 */
+	public function validate($dataRequired)
+	{
+		$methodToUse = "Report.Validate";
+		return self::getWebResponse($methodToUse,$dataRequired);
+	}
 
 	/*
 	 * This function takes in the required set of data and sends it to the server. If the request is valid, then it will return an ID that is used
@@ -55,9 +63,16 @@ class MethodCaller
 	 */
 	public function setReportID($dataRequired)
 	{
+		if(self::validate($dataRequired))
+		{
 		$methodToUse = "Report.Queue";
 		$reportID= self::getWebResponse($methodToUse,$dataRequired)->reportID;
 		return $reportID;
+		}
+		else
+		{
+			echo("The data or format is incorrect, please try again");
+		}
 	}
 	
 	/*
@@ -92,6 +107,34 @@ class MethodCaller
 		$InputRSID = '{"reportSuiteID":"'.$rsid.'"}';
 		$methodToUse="Report.GetMetrics";
 		var_dump(self::getWebResponse($methodToUse,$InputRSID));
+	}
+	
+	/*
+	 * The method will determine what kind of reports are queued on Adobe's servers
+	 */
+	public function getQueue()
+	{	 
+		$username = 'jwang:sharecare';
+		$secret = 'ca632758053f6dd0debd21f736e955aa';
+		$nonce = $nonce = md5(uniqid(php_uname('n'), true));
+		$nonce_ts = date('c');
+
+		$digest = base64_encode(sha1($nonce.$nonce_ts.$secret));
+
+		$server = "https://api.omniture.com";
+		$path = "/admin/1.4/rest/";
+
+		$rc=new SimpleRestClient();
+		$rc->setOption(CURLOPT_HTTPHEADER, array("X-WSSE: UsernameToken Username=\"$username\", PasswordDigest=\"$digest\", Nonce=\"$nonce\", Created=\"$nonce_ts\""));
+
+		$methodToUse="?method=Report.GetQueue";
+
+		$rc->getWebRequest($server.$path.$methodToUse);
+
+		if ($rc->getStatusCode()==200) {
+			$response=$rc->getWebResponse();
+			var_dump($response);
+		} 
 	}
 }
 
