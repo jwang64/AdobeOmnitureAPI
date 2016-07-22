@@ -47,6 +47,52 @@ class MethodCaller
             echo "\n".$rc->getWebResponse();
 		}
 	}
+	
+
+	/*
+	 * This function takes in the required set of data and sends it to the server. If the request is valid, then it will return an ID that is used
+	 * in conjunction with the ReportGet method getReportData in order to get the information from the report.
+	 */
+	public function setReportID($dataRequired)
+	{
+		$methodToUse = "Report.Queue";
+		$reportID= self::getWebResponse($methodToUse,$dataRequired)->reportID;
+		return $reportID;
+	}
+	
+	/*
+	 * This method will take in a report ID and obtain the report data from the Adobe Marketing Servers. Can be used in conjunction with the
+	 * ReportQueue method setReportID but does not have to be used in conjunction. If you have an ID already, then you can use this to get the
+	 * report data as well.
+	 */
+	public function getReportData($reportID)
+	{
+	$reportID = (int) $reportID;
+	$UpdatedReportID = '{"reportID":"'.$reportID.'"}';
+	$methodToUse="Report.Get";
+	sleep(3);
+	var_dump(self::getWebResponse($methodToUse,$UpdatedReportID));
+	}
+	
+	/*
+	 * Get all of the elements for the report suite
+	 */
+	public function getElements($rsid)
+	{
+		$InputRSID = '{"reportSuiteID":"'.$rsid.'"}';
+		$methodToUse="Report.GetElements";
+		var_dump(self::getWebResponse($methodToUse,$InputRSID));
+	}
+	
+	/*
+	 * Get all of the metrics for the report suite
+	 */
+	public function getMetrics($rsid)
+	{
+		$InputRSID = '{"reportSuiteID":"'.$rsid.'"}';
+		$methodToUse="Report.GetMetrics";
+		var_dump(self::getWebResponse($methodToUse,$InputRSID));
+	}
 }
 
 ?>
