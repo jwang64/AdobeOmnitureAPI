@@ -114,8 +114,8 @@ class MethodCaller
 	 */
 	public function getQueue()
 	{	 
-		$username = 'jwang:sharecare';
-		$secret = 'ca632758053f6dd0debd21f736e955aa';
+		$username = 'Your_Username';
+		$secret = 'Your_Secret';
 		$nonce = $nonce = md5(uniqid(php_uname('n'), true));
 		$nonce_ts = date('c');
 
