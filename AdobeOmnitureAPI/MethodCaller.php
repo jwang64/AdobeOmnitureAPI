@@ -11,8 +11,8 @@ class MethodCaller
 	 * to access the API and receive the output of the method and data used. 
 	 */
 	public function GetAPIData($method, $data) {
-        $username = 'Your_Username';
-        $secret = 'Your_Secret';
+        $username = 'YOUR_USERNAME';
+        $secret = 'YOUR_SECRET';
         $nonce = md5(uniqid(php_uname('n'), true));
         $nonce_ts = date('c');
         $digest = base64_encode(sha1($nonce.$nonce_ts.$secret));
@@ -48,13 +48,40 @@ class MethodCaller
 		}
 	}
 	
+	public function apiDataless($method)
+	{
+		$username = 'YOUR_USERNAME';
+		$secret = 'YOUR_SECRET';
+		$nonce = $nonce = md5(uniqid(php_uname('n'), true));
+		$nonce_ts = date('c');
+
+		$digest = base64_encode(sha1($nonce.$nonce_ts.$secret));
+
+		$server = "https://api.omniture.com";
+		$path = "/admin/1.4/rest/";
+
+		$rc=new SimpleRestClient();
+		$rc->setOption(CURLOPT_HTTPHEADER, array("X-WSSE: UsernameToken Username=\"$username\", PasswordDigest=\"$digest\", Nonce=\"$nonce\", Created=\"$nonce_ts\""));
+
+		$methodToUse='?method='.$method;
+
+		$rc->getWebRequest($server.$path.$methodToUse);
+
+		if ($rc->getStatusCode()==200) {
+			$response=$rc->getWebResponse();
+			var_dump($response);
+		} 
+	}
+	
 	/*
 	 * This function will take in the data and validate it
 	 */
 	public function validate($dataRequired)
 	{
+		
 		$methodToUse = "Report.Validate";
-		return self::getWebResponse($methodToUse,$dataRequired);
+		$validate = self::getWebResponse($methodToUse,$dataRequired);
+		return $validate;
 	}
 
 	/*
@@ -63,6 +90,7 @@ class MethodCaller
 	 */
 	public function setReportID($dataRequired)
 	{
+		
 		if(self::validate($dataRequired))
 		{
 		$methodToUse = "Report.Queue";
@@ -82,10 +110,9 @@ class MethodCaller
 	 */
 	public function getReportData($reportID)
 	{
-	$reportID = (int) $reportID;
 	$UpdatedReportID = '{"reportID":"'.$reportID.'"}';
 	$methodToUse="Report.Get";
-	sleep(3);
+	sleep(6);
 	var_dump(self::getWebResponse($methodToUse,$UpdatedReportID));
 	}
 	
@@ -114,27 +141,14 @@ class MethodCaller
 	 */
 	public function getQueue()
 	{	 
-		$username = 'Your_Username';
-		$secret = 'Your_Secret';
-		$nonce = $nonce = md5(uniqid(php_uname('n'), true));
-		$nonce_ts = date('c');
-
-		$digest = base64_encode(sha1($nonce.$nonce_ts.$secret));
-
-		$server = "https://api.omniture.com";
-		$path = "/admin/1.4/rest/";
-
-		$rc=new SimpleRestClient();
-		$rc->setOption(CURLOPT_HTTPHEADER, array("X-WSSE: UsernameToken Username=\"$username\", PasswordDigest=\"$digest\", Nonce=\"$nonce\", Created=\"$nonce_ts\""));
-
-		$methodToUse="?method=Report.GetQueue";
-
-		$rc->getWebRequest($server.$path.$methodToUse);
-
-		if ($rc->getStatusCode()==200) {
-			$response=$rc->getWebResponse();
-			var_dump($response);
-		} 
+		$methodToUse="Report.GetQueue";
+		self::apiDataless($methodToUse);
+	}
+	
+	public function getAllSegments()
+	{
+		$methodToUse="Segments.Get";
+		self::apiDataless($methodToUse);
 	}
 }
 
