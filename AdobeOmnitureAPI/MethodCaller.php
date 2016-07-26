@@ -11,8 +11,8 @@ class MethodCaller
 	 * to access the API and receive the output of the method and data used. 
 	 */
 	public function GetAPIData($method, $data) {
-        $username = 'YOUR_USERNAME';
-        $secret = 'YOUR_SECRET';
+        $username = 'Your_Username';
+        $secret = 'Your_Secret';
         $nonce = md5(uniqid(php_uname('n'), true));
         $nonce_ts = date('c');
         $digest = base64_encode(sha1($nonce.$nonce_ts.$secret));
@@ -50,8 +50,8 @@ class MethodCaller
 	
 	public function apiDataless($method)
 	{
-		$username = 'YOUR_USERNAME';
-		$secret = 'YOUR_SECRET';
+		$username = 'Your_Username';
+		$secret = 'Your_Secret';
 		$nonce = $nonce = md5(uniqid(php_uname('n'), true));
 		$nonce_ts = date('c');
 
@@ -150,6 +150,14 @@ class MethodCaller
 		$methodToUse="Segments.Get";
 		self::apiDataless($methodToUse);
 	}
+	
+	public function getReportsuiteSegments($reportsuite)
+	{
+		$methodToUse="ReportSuite.GetSegments";
+		$formattedRSID ='{"rsid_list":["'.$reportsuite.'"]}';
+		var_dump(self::getWebResponse($methodToUse,$formattedRSID));
+	}
+	
 }
 
 ?>
