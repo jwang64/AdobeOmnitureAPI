@@ -48,6 +48,9 @@ class MethodCaller
 		}
 	}
 	
+	/*
+	 * This method will get a webrequest for methods that don't require data to access them then give the output.
+	 */
 	public function apiDataless($method)
 	{
 		$username = 'Your_Username';
@@ -113,7 +116,17 @@ class MethodCaller
 	$UpdatedReportID = '{"reportID":"'.$reportID.'"}';
 	$methodToUse="Report.Get";
 	sleep(6);
-	var_dump(self::getWebResponse($methodToUse,$UpdatedReportID));
+	return self::getWebResponse($methodToUse,$UpdatedReportID);
+	}
+	
+	/*
+	 * This method will allow a person to take in the report data and save it in a file of their specification. It will take the report data then encode it into a json format then save the data
+	 */
+	public function saveReportData($filename, $ReportData)
+	{
+		$formattedReportData = json_encode($ReportData);
+		file_put_contents($filename,$formattedReportData);
+		echo("The file has been saved to ".$filename);
 	}
 	
 	/*
@@ -145,12 +158,20 @@ class MethodCaller
 		self::apiDataless($methodToUse);
 	}
 	
+	/*
+	 * This method will return all the segments that are owned by the company
+	 * Note: you will have to have adminstrative powers to use this method
+	 */
 	public function getAllSegments()
 	{
 		$methodToUse="Segments.Get";
 		self::apiDataless($methodToUse);
 	}
 	
+	/*
+	 * This method will allow users to obtain segments from a specific report suite. It doesn't require users to be adminstrators to use
+	 * The report suite id must be obtained by someone who has administrative access.
+	 */
 	public function getReportsuiteSegments($reportsuite)
 	{
 		$methodToUse="ReportSuite.GetSegments";
