@@ -14,6 +14,6 @@ $dataRequired='{
             }
            }';
 
-$methodCaller->getReportData($methodCaller->setReportID($dataRequired));
+var_dump($methodCaller->getReportData($methodCaller->setReportID($dataRequired)));
 
 ?>

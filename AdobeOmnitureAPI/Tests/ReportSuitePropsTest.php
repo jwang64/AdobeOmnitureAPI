@@ -6,6 +6,6 @@ $methodCaller = new MethodCaller();
 
 $rsid = "sharecareprod";
 
-$methodCaller->saveRequest("sharecareSegments.json",$methodCaller->getReportsuiteSegments($rsid));
+$methodCaller->saveRequest("sharecareProps.json",$methodCaller->getReportsuiteProps($rsid));
 
 ?>

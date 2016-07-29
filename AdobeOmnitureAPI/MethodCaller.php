@@ -72,7 +72,8 @@ class MethodCaller
 
 		if ($rc->getStatusCode()==200) {
 			$response=$rc->getWebResponse();
-			var_dump($response);
+			$json=json_decode($response);
+			return $json;
 		} 
 	}
 	
@@ -115,17 +116,17 @@ class MethodCaller
 	{
 	$UpdatedReportID = '{"reportID":"'.$reportID.'"}';
 	$methodToUse="Report.Get";
-	sleep(6);
+	sleep(20);
 	return self::getWebResponse($methodToUse,$UpdatedReportID);
 	}
 	
 	/*
-	 * This method will allow a person to take in the report data and save it in a file of their specification. It will take the report data then encode it into a json format then save the data
+	 * This method will allow a person to take in the information returned from the web request and save it in a file of their specification. It will take the data then encode it into a json format then save the data
 	 */
-	public function saveReportData($filename, $ReportData)
+	public function saveRequest($filename, $data)
 	{
-		$formattedReportData = json_encode($ReportData);
-		file_put_contents($filename,$formattedReportData);
+		$formattedData = json_encode($data, JSON_PRETTY_PRINT);
+		file_put_contents($filename,$formattedData);
 		echo("The file has been saved to ".$filename);
 	}
 	
@@ -136,7 +137,7 @@ class MethodCaller
 	{
 		$InputRSID = '{"reportSuiteID":"'.$rsid.'"}';
 		$methodToUse="Report.GetElements";
-		var_dump(self::getWebResponse($methodToUse,$InputRSID));
+		return self::getWebResponse($methodToUse,$InputRSID);
 	}
 	
 	/*
@@ -146,7 +147,7 @@ class MethodCaller
 	{
 		$InputRSID = '{"reportSuiteID":"'.$rsid.'"}';
 		$methodToUse="Report.GetMetrics";
-		var_dump(self::getWebResponse($methodToUse,$InputRSID));
+		return self::getWebResponse($methodToUse,$InputRSID);
 	}
 	
 	/*
@@ -155,7 +156,7 @@ class MethodCaller
 	public function getQueue()
 	{	 
 		$methodToUse="Report.GetQueue";
-		self::apiDataless($methodToUse);
+		return self::apiDataless($methodToUse);
 	}
 	
 	/*
@@ -165,7 +166,7 @@ class MethodCaller
 	public function getAllSegments()
 	{
 		$methodToUse="Segments.Get";
-		self::apiDataless($methodToUse);
+		return self::apiDataless($methodToUse);
 	}
 	
 	/*
@@ -176,8 +177,39 @@ class MethodCaller
 	{
 		$methodToUse="ReportSuite.GetSegments";
 		$formattedRSID ='{"rsid_list":["'.$reportsuite.'"]}';
-		var_dump(self::getWebResponse($methodToUse,$formattedRSID));
+		return self::getWebResponse($methodToUse,$formattedRSID);
 	}
+	
+	/*
+	 * This method will allow users to obtain the evars from a specific report suite.
+	 */
+	public function getReportsuiteEvars($reportsuite)
+	{
+		$methodToUse="ReportSuite.GetEvars";
+		$formattedRSID ='{"rsid_list":["'.$reportsuite.'"]}';
+		return self::getWebResponse($methodToUse,$formattedRSID);
+	}
+	
+	/*
+	 * This method will allow users to obtain the events from a specific report suite
+	 */
+	public function getReportsuiteEvents($reportsuite)
+	{
+		$methodToUse="ReportSuite.GetEvents";
+		$formattedRSID ='{"rsid_list":["'.$reportsuite.'"]}';
+		return self::getWebResponse($methodToUse,$formattedRSID);
+	}
+	
+	/*
+	 * This method will allow users to obtain the props from a specific report suite
+	 */
+	public function getReportsuiteProps($reportsuite)
+	{
+		$methodToUse="ReportSuite.GetProps";
+		$formattedRSID ='{"rsid_list":["'.$reportsuite.'"]}';
+		return self::getWebResponse($methodToUse,$formattedRSID);
+	}
+	
 	
 }
 
