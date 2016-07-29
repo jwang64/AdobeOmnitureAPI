@@ -4,11 +4,14 @@ include_once(dirname(__FILE__) . '/../MethodCaller.php');
 
 $methodCaller = new MethodCaller();
 
+$dateFrom = date("Y-m-d", strtotime("first day of previous month"));
+$dateTo = date("Y-m-d", strtotime("last day of previous month"));
+
 $dataRequired='{
 			"reportDescription":{
                 "reportSuiteID":"sharecareprod",
-                "dateFrom":"2016-06-01",
-                "dateTo":"2016-07-01",
+                "dateFrom":"'.$dateFrom.'",
+                "dateTo":"'.$dateTo.'",
                 "metrics":[
 							{
 								"id":"visits"
@@ -27,7 +30,6 @@ $dataRequired='{
             }
            }';
 
-var_dump($methodCaller->getReportData($methodCaller->setReportID($dataRequired)));
-//$methodCaller->getReportData('552025043');
+$methodCaller->saveRequest("dateTestFile.json",$methodCaller->getReportData($methodCaller->setReportID($dataRequired)));
 
 ?>

@@ -27,6 +27,6 @@ $dataRequired='{
             }
            }';
 
-$methodCaller->saveReportData("testfile.json",$methodCaller->getReportData($methodCaller->setReportID($dataRequired)));
+$methodCaller->saveRequest("testfile.json",$methodCaller->getReportData($methodCaller->setReportID($dataRequired)));
 
 ?>
